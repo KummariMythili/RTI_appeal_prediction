@@ -1,0 +1,14 @@
+pandas
+numpy
+scikit-learn
+nltk
+joblib
+flask
+gunicorn
+jinja2
+werkzeug
+tqdm
+seaborn
+matplotlib
+scipy
+faker

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>RTI Appeal Category Prediction</title>
+    <link rel="stylesheet" href="/static/main_css.css">
+</head>
+<body>
+    <div class="container">
+        <h2>RTI Appeal Category Prediction</h2>
+        <form action="/predict" method="post">
+            <label>Appeal Text:</label><br>
+            <textarea name="Appeal_Text" rows="4" cols="50" required></textarea><br><br>
+
+            <label>Applicant Gender:</label>
+            <select name="Applicant_Gender">
+                {% for gender in gender_labels %}
+                <option value="{{ gender }}">{{ gender }}</option>
+                {% endfor %}
+            </select><br><br>
+
+            <label>Department Name:</label>
+            <select name="Department_Name">
+                {% for dept in dept_labels %}
+                <option value="{{ dept }}">{{ dept }}</option>
+                {% endfor %}
+            </select><br><br>
+
+            <label>Appeal Date (Ordinal):</label>
+            <input type="number" name="Appeal_Date" required><br><br>
+
+            <label>Language:</label>
+            <select name="Language">
+                {% for lang in lang_labels %}
+                <option value="{{ lang }}">{{ lang }}</option>
+                {% endfor %}
+            </select><br><br>
+
+            <label>Appeal Type:</label>
+            <select name="Appeal_Type">
+                {% for typ in type_labels %}
+                <option value="{{ typ }}">{{ typ }}</option>
+                {% endfor %}
+            </select><br><br>
+
+            <button type="submit">Predict</button>
+        </form>
+
+        {% if prediction %}
+        <h3>{{ prediction }}</h3>
+        {% endif %}
+    </div>
+</body>
+</html>
