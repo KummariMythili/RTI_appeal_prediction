@@ -7,12 +7,14 @@ app = Flask(__name__)
 # 📌 Load model and encoders
 model = joblib.load('model/fine_tune.pkl')
 label_encoders = joblib.load('model/label_encoders.pkl')
-target_encoder = joblib.load('model/target_encoder.pkl')  # ✅ Added for decoding output
+target_encoder = joblib.load('model/target_encoder.pkl')
 
 @app.route('/')
 def index():
     return render_template(
         'index.html',
+        prediction=None,
+        input_values={},
         gender_labels=label_encoders['Applicant_Gender'].classes_,
         dept_labels=label_encoders['Department_Name'].classes_,
         lang_labels=label_encoders['Language'].classes_,
@@ -22,7 +24,7 @@ def index():
 @app.route('/predict', methods=['POST'])
 def predict():
     try:
-        # 📌 Get form inputs
+        # Get input values from form
         appeal_text = request.form['Appeal_Text']
         gender = request.form['Applicant_Gender']
         department = request.form['Department_Name']
@@ -30,13 +32,13 @@ def predict():
         language = request.form['Language']
         appeal_type = request.form['Appeal_Type']
 
-        # 📌 Encode inputs
+        # Encode features
         gender_encoded = label_encoders['Applicant_Gender'].transform([gender])[0]
         dept_encoded = label_encoders['Department_Name'].transform([department])[0]
         lang_encoded = label_encoders['Language'].transform([language])[0]
         type_encoded = label_encoders['Appeal_Type'].transform([appeal_type])[0]
 
-        # 📌 Create input DataFrame
+        # Prepare input DataFrame
         input_data = pd.DataFrame([{
             'Appeal_Text': appeal_text,
             'Applicant_Gender': gender_encoded,
@@ -46,20 +48,29 @@ def predict():
             'Appeal_Type': type_encoded
         }])
 
-        # 📌 Predict (encoded)
+        # Predict
         pred_encoded = model.predict(input_data)[0]
+        pred_label = target_encoder.inverse_transform([pred_encoded])[0]
+        prediction = f"📌 Predicted Appeal Category: {pred_label}"
 
-        # ✅ Decode category name from encoded label
-        pred_decoded = target_encoder.inverse_transform([pred_encoded])[0]
-
-        result = f"📌 Predicted Appeal Category: {pred_decoded}"
+        # Store input values to show on frontend
+        input_values = {
+            'Appeal_Text': appeal_text,
+            'Applicant_Gender': gender,
+            'Department_Name': department,
+            'Appeal_Date': appeal_date,
+            'Language': language,
+            'Appeal_Type': appeal_type
+        }
 
     except Exception as e:
-        result = f"❌ Error: {e}"
+        prediction = f"❌ Error: {e}"
+        input_values = {}
 
     return render_template(
         'index.html',
-        prediction=result,
+        prediction=prediction,
+        input_values=input_values,
         gender_labels=label_encoders['Applicant_Gender'].classes_,
         dept_labels=label_encoders['Department_Name'].classes_,
         lang_labels=label_encoders['Language'].classes_,

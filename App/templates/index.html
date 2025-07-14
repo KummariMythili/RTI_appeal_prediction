@@ -6,47 +6,60 @@
 </head>
 <body>
     <div class="container">
-        <h2>RTI Appeal Category Prediction</h2>
-        <form action="/predict" method="post">
+        <h2>🔍 RTI Appeal Category Prediction</h2>
+        <form action="/" method="post">
             <label>Appeal Text:</label><br>
-            <textarea name="Appeal_Text" rows="4" cols="50" required></textarea><br><br>
+            <textarea name="Appeal_Text" rows="4" cols="60" required>{{ input_values.get('Appeal_Text', '') }}</textarea><br><br>
 
             <label>Applicant Gender:</label>
             <select name="Applicant_Gender">
                 {% for gender in gender_labels %}
-                <option value="{{ gender }}">{{ gender }}</option>
+                    <option value="{{ gender }}" {% if input_values.get('Applicant_Gender') == gender %}selected{% endif %}>{{ gender }}</option>
                 {% endfor %}
             </select><br><br>
 
             <label>Department Name:</label>
             <select name="Department_Name">
                 {% for dept in dept_labels %}
-                <option value="{{ dept }}">{{ dept }}</option>
+                    <option value="{{ dept }}" {% if input_values.get('Department_Name') == dept %}selected{% endif %}>{{ dept }}</option>
                 {% endfor %}
             </select><br><br>
 
             <label>Appeal Date (Ordinal):</label>
-            <input type="number" name="Appeal_Date" required><br><br>
+            <input type="number" name="Appeal_Date" value="{{ input_values.get('Appeal_Date', '') }}" required><br><br>
 
             <label>Language:</label>
             <select name="Language">
                 {% for lang in lang_labels %}
-                <option value="{{ lang }}">{{ lang }}</option>
+                    <option value="{{ lang }}" {% if input_values.get('Language') == lang %}selected{% endif %}>{{ lang }}</option>
                 {% endfor %}
             </select><br><br>
 
             <label>Appeal Type:</label>
             <select name="Appeal_Type">
                 {% for typ in type_labels %}
-                <option value="{{ typ }}">{{ typ }}</option>
+                    <option value="{{ typ }}" {% if input_values.get('Appeal_Type') == typ %}selected{% endif %}>{{ typ }}</option>
                 {% endfor %}
             </select><br><br>
 
-            <button type="submit">Predict</button>
+            <button type="submit">🔮 Predict</button>
         </form>
 
         {% if prediction %}
-        <h3>{{ prediction }}</h3>
+            <div class="result">
+                <h3>{{ prediction }}</h3>
+                {% if input_values %}
+                    <h4>📝 Your Input Summary:</h4>
+                    <ul>
+                        <li><strong>Appeal Text:</strong> {{ input_values['Appeal_Text'] }}</li>
+                        <li><strong>Applicant Gender:</strong> {{ input_values['Applicant_Gender'] }}</li>
+                        <li><strong>Department Name:</strong> {{ input_values['Department_Name'] }}</li>
+                        <li><strong>Appeal Date:</strong> {{ input_values['Appeal_Date'] }}</li>
+                        <li><strong>Language:</strong> {{ input_values['Language'] }}</li>
+                        <li><strong>Appeal Type:</strong> {{ input_values['Appeal_Type'] }}</li>
+                    </ul>
+                {% endif %}
+            </div>
         {% endif %}
     </div>
 </body>
