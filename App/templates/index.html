@@ -15,108 +15,22 @@
   </div>
 </nav>
 
-<header class="bg-light py-5 text-center">
+<header class="bg-light py-5">
   <div class="container">
-    <h1 class="display-5 fw-bold">RTI Appeal Category Prediction</h1>
-    <p class="lead">Classify appeals as Follow-up, Grievance, Service Delay, or Other using Machine Learning.</p>
-    <img src="{{ url_for('static', filename='rti.jpg') }}" 
-         alt="RTI" 
-         class="img-fluid rounded mt-3" 
-         style="max-height: 300px;">
+    <div class="row align-items-center">
+      <div class="col-md-7">
+        <h1 class="display-5 fw-bold">RTI Appeal Category Prediction</h1>
+        <p class="lead">Classify appeals as Follow-up, Grievance, Service Delay, or Other using Machine Learning.</p>
+      </div>
+      <div class="col-md-5 text-center">
+        <img src="{{ url_for('static', filename='rti.jpg') }}" 
+             alt="RTI" 
+             class="img-fluid rounded" 
+             style="max-height: 250px;">
+      </div>
+    </div>
   </div>
 </header>
-
-<section class="py-5">
-  <div class="container">
-    <h2 class="text-center mb-4">📝 Enter Appeal Information</h2>
-    <form method="POST" action="/" class="row g-3">
-
-      <div class="col-md-12">
-        <label class="form-label">📄 Appeal Text</label>
-        <textarea name="Appeal_Text" rows="4" class="form-control" placeholder="Enter full appeal description" required>{{ input_values.get('Appeal_Text', '') }}</textarea>
-      </div>
-
-      <div class="col-md-6">
-        <label class="form-label">⚧️ Applicant Gender</label>
-        <select name="Applicant_Gender" class="form-select">
-          {% for gender in gender_labels %}
-            <option value="{{ gender }}" {% if input_values.get('Applicant_Gender') == gender %}selected{% endif %}>{{ gender }}</option>
-          {% endfor %}
-        </select>
-      </div>
-
-      <div class="col-md-6">
-        <label class="form-label">🏢 Department Name</label>
-        <select name="Department_Name" class="form-select">
-          {% for dept in dept_labels %}
-            <option value="{{ dept }}" {% if input_values.get('Department_Name') == dept %}selected{% endif %}>{{ dept }}</option>
-          {% endfor %}
-        </select>
-      </div>
-
-      <div class="col-md-6">
-        <label class="form-label">📅 Appeal Date (Ordinal)</label>
-        <input type="number" name="Appeal_Date" class="form-control" value="{{ input_values.get('Appeal_Date', '') }}" required>
-      </div>
-
-      <div class="col-md-6">
-        <label class="form-label">🗣️ Language</label>
-        <select name="Language" class="form-select">
-          {% for lang in lang_labels %}
-            <option value="{{ lang }}" {% if input_values.get('Language') == lang %}selected{% endif %}>{{ lang }}</option>
-          {% endfor %}
-        </select>
-      </div>
-
-      <div class="col-md-6">
-        <label class="form-label">📂 Appeal Type</label>
-        <select name="Appeal_Type" class="form-select">
-          {% for typ in type_labels %}
-            <option value="{{ typ }}" {% if input_values.get('Appeal_Type') == typ %}selected{% endif %}>{{ typ }}</option>
-          {% endfor %}
-        </select>
-      </div>
-
-      <div class="col-12">
-        <button type="submit" class="btn btn-primary w-100">🔍 Predict Appeal Category</button>
-      </div>
-    </form>
-
-    {% if prediction %}
-    <div class="alert alert-success mt-5">
-      <h4>{{ prediction }}</h4>
-    </div>
-    {% endif %}
-
-    {% if input_values %}
-    <div class="mt-4 p-3 bg-light border rounded">
-      <h5>📥 Input Summary:</h5>
-      <ul class="list-group list-group-flush">
-        <li class="list-group-item"><strong>Appeal Text:</strong> {{ input_values['Appeal_Text'] }}</li>
-        <li class="list-group-item"><strong>Applicant Gender:</strong> {{ input_values['Applicant_Gender'] }}</li>
-        <li class="list-group-item"><strong>Department Name:</strong> {{ input_values['Department_Name'] }}</li>
-        <li class="list-group-item"><strong>Appeal Date:</strong> {{ input_values['Appeal_Date'] }}</li>
-        <li class="list-group-item"><strong>Language:</strong> {{ input_values['Language'] }}</li>
-        <li class="list-group-item"><strong>Appeal Type:</strong> {{ input_values['Appeal_Type'] }}</li>
-      </ul>
-    </div>
-    {% endif %}
-  </div>
-</section>
-
-<section class="bg-light py-5">
-  <div class="container">
-    <h2 class="text-center mb-4">📘 Understanding the Fields</h2>
-    <ul class="list-group list-group-flush fs-5">
-      <li class="list-group-item"><strong>Appeal Text:</strong> Full content of the RTI appeal for classification.</li>
-      <li class="list-group-item"><strong>Applicant Gender:</strong> Gender of the applicant (Male, Female, Other).</li>
-      <li class="list-group-item"><strong>Department Name:</strong> The government department addressed.</li>
-      <li class="list-group-item"><strong>Appeal Date:</strong> Ordinal representation of the date of appeal submission.</li>
-      <li class="list-group-item"><strong>Language:</strong> Language in which the appeal is written.</li>
-      <li class="list-group-item"><strong>Appeal Type:</strong> Type of appeal like First Appeal or Second Appeal.</li>
-    </ul>
-  </div>
-</section>
 
 <section class="py-5 bg-white border-top">
   <div class="container">
@@ -133,6 +47,101 @@
       <div class="col-md-4">
         <h5>🔐 Secure & Confidential</h5>
         <p>Your data is processed locally and never shared externally.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="py-5">
+  <div class="container">
+    <div class="row g-5">
+      <!-- Prediction Form -->
+      <div class="col-lg-6">
+        <h2 class="text-center mb-4">📝 Enter Appeal Information</h2>
+        <form method="POST" action="/" class="row g-3">
+          <div class="col-12">
+            <label class="form-label">📄 Appeal Text</label>
+            <textarea name="Appeal_Text" rows="4" class="form-control" placeholder="Enter full appeal description" required>{{ input_values.get('Appeal_Text', '') }}</textarea>
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label">⚧️ Applicant Gender</label>
+            <select name="Applicant_Gender" class="form-select">
+              {% for gender in gender_labels %}
+                <option value="{{ gender }}" {% if input_values.get('Applicant_Gender') == gender %}selected{% endif %}>{{ gender }}</option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label">🏢 Department Name</label>
+            <select name="Department_Name" class="form-select">
+              {% for dept in dept_labels %}
+                <option value="{{ dept }}" {% if input_values.get('Department_Name') == dept %}selected{% endif %}>{{ dept }}</option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label">📅 Appeal Date (Ordinal)</label>
+            <input type="number" name="Appeal_Date" class="form-control" value="{{ input_values.get('Appeal_Date', '') }}" required>
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label">🗣️ Language</label>
+            <select name="Language" class="form-select">
+              {% for lang in lang_labels %}
+                <option value="{{ lang }}" {% if input_values.get('Language') == lang %}selected{% endif %}>{{ lang }}</option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label">📂 Appeal Type</label>
+            <select name="Appeal_Type" class="form-select">
+              {% for typ in type_labels %}
+                <option value="{{ typ }}" {% if input_values.get('Appeal_Type') == typ %}selected{% endif %}>{{ typ }}</option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <div class="col-12">
+            <button type="submit" class="btn btn-primary w-100">🔍 Predict Appeal Category</button>
+          </div>
+        </form>
+
+        {% if prediction %}
+        <div class="alert alert-success mt-4">
+          <h4>{{ prediction }}</h4>
+        </div>
+        {% endif %}
+
+        {% if input_values %}
+        <div class="mt-4 p-3 bg-light border rounded">
+          <h5>📥 Input Summary:</h5>
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item"><strong>Appeal Text:</strong> {{ input_values['Appeal_Text'] }}</li>
+            <li class="list-group-item"><strong>Applicant Gender:</strong> {{ input_values['Applicant_Gender'] }}</li>
+            <li class="list-group-item"><strong>Department Name:</strong> {{ input_values['Department_Name'] }}</li>
+            <li class="list-group-item"><strong>Appeal Date:</strong> {{ input_values['Appeal_Date'] }}</li>
+            <li class="list-group-item"><strong>Language:</strong> {{ input_values['Language'] }}</li>
+            <li class="list-group-item"><strong>Appeal Type:</strong> {{ input_values['Appeal_Type'] }}</li>
+          </ul>
+        </div>
+        {% endif %}
+      </div>
+
+      <!-- Field Explanations -->
+      <div class="col-lg-6">
+        <h2 class="text-center mb-4">📘 Understanding the Fields</h2>
+        <ul class="list-group list-group-flush fs-5">
+          <li class="list-group-item"><strong>Appeal Text:</strong> Full content of the RTI appeal for classification.</li>
+          <li class="list-group-item"><strong>Applicant Gender:</strong> Gender of the applicant (Male, Female, Other).</li>
+          <li class="list-group-item"><strong>Department Name:</strong> The government department addressed.</li>
+          <li class="list-group-item"><strong>Appeal Date:</strong> Ordinal representation of the date of appeal submission.</li>
+          <li class="list-group-item"><strong>Language:</strong> Language in which the appeal is written.</li>
+          <li class="list-group-item"><strong>Appeal Type:</strong> Type of appeal like First Appeal or Second Appeal.</li>
+        </ul>
       </div>
     </div>
   </div>
